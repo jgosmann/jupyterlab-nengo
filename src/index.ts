@@ -24,18 +24,25 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
 
         let context = this._context = options.context;
 
-        let iframe = document.createElement('iframe');
-        iframe.src = 'http://localhost:8080/?filename=' + context.path;
-        iframe.width = '100%';
-        iframe.height = '100%';
-        iframe.frameBorder = '0';
-        iframe.allowFullscreen = true;
-        this.node.appendChild(iframe);
-
         this.title.iconClass = 'nengo-icon';
         this.title.label = context.path;
 
-        this._ready.resolve(undefined);
+        let ready = this._ready;
+        let iframe = document.createElement('iframe');
+        this.node.appendChild(iframe);
+
+        fetch('/nengo/start_gui').then(response => {
+            return response.json();
+        }).then(data => {
+            iframe.src = '/nengo/' + data.port + '/?filename=' + 
+                encodeURIComponent(context.path) +
+                '&token=' + data.token;
+            iframe.width = '100%';
+            iframe.height = '100%';
+            iframe.frameBorder = '0';
+            iframe.allowFullscreen = true;
+            ready.resolve(undefined);
+        });
     }
 
     get ready() {
