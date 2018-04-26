@@ -1,0 +1,7 @@
+.nengo-icon {
+    background-image: url(http://localhost:8080/favicon.ico);
+    background-size: 16px;
+    min-width: 16px;
+    min-height: 16px;
+    vertical-align: middle;
+}
