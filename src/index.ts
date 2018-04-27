@@ -1,6 +1,10 @@
 import {
-  JupyterLab, JupyterLabPlugin
+  ILayoutRestorer, JupyterLab, JupyterLabPlugin
 } from '@jupyterlab/application';
+
+import {
+    InstanceTracker
+} from '@jupyterlab/apputils';
 
 import {
     IChangedArgs
@@ -106,6 +110,10 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
         });
     }
 
+    get context() {
+        return this._context;
+    }
+
     get ready() {
         return this._ready.promise;
     }
@@ -207,13 +215,17 @@ namespace NengoViewerFactory {
 }
 
 
+const FACTORY = 'Nengo';
+
+
 /**
  * Initialization data for the jupyterlab_nengo extension.
  */
 const extension: JupyterLabPlugin<void> = {
     id: 'jupyterlab_nengo',
     autoStart: true,
-    activate: (app: JupyterLab) => {
+    requires: [ILayoutRestorer],
+    activate: (app: JupyterLab, restorer: ILayoutRestorer) => {
         let opener = {open: (widget: Widget) => { }};
         let docManager = new DocumentManager({
             registry: app.docRegistry,
@@ -222,12 +234,25 @@ const extension: JupyterLabPlugin<void> = {
         });
 
         const factory = new NengoViewerFactory({
-            name: 'Nengo',
+            name: FACTORY,
             fileTypes: ['python'],
             docManager
         });
 
+        const tracker = new InstanceTracker<NengoViewer>(
+            { namespace: 'nengoviewer' });
+        restorer.restore(tracker, {
+            command: 'docmanager:open',
+            args: widget => ({ path: widget.context.path, factory: FACTORY }),
+            name: widget => widget.context.path
+        });
+
         app.docRegistry.addWidgetFactory(factory);
+        factory.widgetCreated.connect((sender, widget) => {
+            tracker.add(widget);
+            widget.context.pathChanged.connect(() => { tracker.save(widget); });
+        });
+
         console.log('JupyterLab extension jupyterlab_nengo is activated!');
     }
 };
