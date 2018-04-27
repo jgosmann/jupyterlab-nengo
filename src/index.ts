@@ -50,8 +50,6 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
                 return;
             }
 
-            console.log('load');
-
             let ace = this._ace = (iframe.contentWindow as any).Nengo.ace;
 
             // Handle editor synchronization
