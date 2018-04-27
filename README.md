@@ -1,4 +1,4 @@
-# jupyterlab_nengo
+# jupyterlab-nengo
 
 Use the Nengo GUI within JupyterLab.
 
@@ -10,7 +10,7 @@ Use the Nengo GUI within JupyterLab.
 ## Installation
 
 ```bash
-jupyter labextension install jupyterlab_nengo
+jupyter labextension install jupyterlab-nengo
 ```
 
 ## Development

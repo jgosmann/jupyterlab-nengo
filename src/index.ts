@@ -222,7 +222,7 @@ const FACTORY = 'Nengo';
  * Initialization data for the jupyterlab_nengo extension.
  */
 const extension: JupyterLabPlugin<void> = {
-    id: 'jupyterlab_nengo',
+    id: 'jupyterlab-nengo',
     autoStart: true,
     requires: [ILayoutRestorer],
     activate: (app: JupyterLab, restorer: ILayoutRestorer) => {
@@ -253,7 +253,7 @@ const extension: JupyterLabPlugin<void> = {
             widget.context.pathChanged.connect(() => { tracker.save(widget); });
         });
 
-        console.log('JupyterLab extension jupyterlab_nengo is activated!');
+        console.log('JupyterLab extension jupyterlab-nengo is activated!');
     }
 };
 
