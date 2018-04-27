@@ -29,6 +29,9 @@ import {
 import '../style/index.css';
 
 
+const DIRTY_CLASS = 'jp-mod-dirty';
+
+
 export
 class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
     constructor(options: NengoViewer.IOptions) {
@@ -142,12 +145,20 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
     protected onModelStateChanged(
             model: DocumentRegistry.ICodeModel,
             changed: IChangedArgs<DocumentRegistry.ICodeModel>) {
-        if (changed.name == 'dirty') {
-            if (changed.newValue) {
-                this._ace.enable_save();
-            } else {
-                this._ace.disable_save();
-            }
+        if (changed.name === 'dirty') {
+            this.handleDirtyState();
+        }
+    }
+
+    protected handleDirtyState() {
+        if (this._context.model.dirty) {
+            console.log(this._ace);
+            this._ace.enable_save();
+            this.title.className += ` ${DIRTY_CLASS}`;
+        } else {
+            this._ace.disable_save();
+            this.title.className = this.title.className.replace(
+                DIRTY_CLASS, '');
         }
     }
 
