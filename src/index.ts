@@ -66,19 +66,28 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
                 this.onModelContentChanged, this);
 
             // Handle synchronization of save state
-            iframe.contentDocument.getElementById('Save_file').addEventListener(
-                'click', () => {
-                    if (context.model.dirty) {
-                        context.model.dirty = false;
-                        context.save();
+            this._saveMutationObserver = new MutationObserver(
+                (mutations: Array<MutationRecord>) => {
+                    for (let mutation of mutations) {
+                        if (mutation.type == 'attributes' && mutation.attributeName == 'class') {
+                            if ((mutation.target as Element).classList.contains('disabled')) {
+                                if (context.model.dirty) {
+                                    context.model.dirty = false;
+                                    context.save()
+                                }
+                            }
+                        }
                     }
                 }
             );
+            this._saveMutationObserver.observe(
+                iframe.contentDocument.getElementById('Save_file'),
+                { attributes: true });
 
             context.model.stateChanged.connect(this.onModelStateChanged, this);
 
             // Handle synchronization of renames
-            this._mutationObserver = new MutationObserver(
+            this._renameMutationObserver = new MutationObserver(
                 (mutations: Array<MutationRecord>) => {
                     for (let mutation of mutations) {
                         if (mutation.type == 'childList') {
@@ -90,7 +99,7 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
                     }
                 }
             );
-            this._mutationObserver.observe(
+            this._renameMutationObserver.observe(
                 iframe.contentDocument.getElementById('filename'),
                 { childList: true });
             context.pathChanged.connect(this.onPathChanged, this);
@@ -131,7 +140,7 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
         this._context.model.stateChanged.disconnect(
             this.onModelStateChanged, this);
         this._context.pathChanged.disconnect(this.onPathChanged, this);
-        this._mutationObserver.disconnect();
+        this._renameMutationObserver.disconnect();
         this._iframe = undefined;
         this._ace = undefined;
     }
@@ -178,7 +187,8 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
     private _ace: any;
     private _path: string;
 
-    private _mutationObserver: MutationObserver;
+    private _renameMutationObserver: MutationObserver;
+    private _saveMutationObserver: MutationObserver;
 
     private _port: number;
     private _token: string;
