@@ -152,7 +152,6 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
 
     protected handleDirtyState() {
         if (this._context.model.dirty) {
-            console.log(this._ace);
             this._ace.enable_save();
             this.title.className += ` ${DIRTY_CLASS}`;
         } else {
