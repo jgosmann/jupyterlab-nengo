@@ -57,7 +57,11 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
 
             // Handle editor synchronization
             ace.editor.on('input', (e: any) => {
-                if (ace.editor.getValue() != context.model.value.text) {
+                if (!this._initializedEditor) {
+                    this._initializedEditor = true;
+                    ace.editor.setValue(context.model.value.text, 1);
+                    this.handleDirtyState();
+                } else if (ace.editor.getValue() != context.model.value.text) {
                     context.model.value.text = ace.editor.getValue();
                 }
             });
@@ -187,6 +191,7 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
     private _ace: any;
     private _path: string;
 
+    private _initializedEditor : boolean = false;
     private _renameMutationObserver: MutationObserver;
     private _saveMutationObserver: MutationObserver;
 
