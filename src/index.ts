@@ -15,7 +15,7 @@ import {
 } from '@jupyterlab/docmanager';
 
 import {
-    ABCWidgetFactory, DocumentRegistry
+    ABCWidgetFactory, DocumentRegistry, DocumentWidget, IDocumentWidget
 } from '@jupyterlab/docregistry';
 
 import {
@@ -33,9 +33,9 @@ const DIRTY_CLASS = 'jp-mod-dirty';
 
 
 export
-class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
+class NengoViewer extends Widget {
     constructor(options: NengoViewer.IOptions) {
-        super();
+        super(options);
 
         let context = this._context = options.context;
         let docManager = this._docManager = options.docManager;
@@ -203,8 +203,9 @@ class NengoViewer extends Widget implements DocumentRegistry.IReadyWidget {
 export
 namespace NengoViewer {
     export
-    interface IOptions {
-        context: DocumentRegistry.IContext<DocumentRegistry.ICodeModel>;
+    interface IOptions
+    extends DocumentWidget.IOptionsOptionalContent<
+        NengoViewer, DocumentRegistry.ICodeModel> {
         docManager: DocumentManager;
     }
 }
@@ -212,7 +213,9 @@ namespace NengoViewer {
 
 export
 class NengoViewerFactory
-extends ABCWidgetFactory<NengoViewer, DocumentRegistry.ICodeModel> {
+extends ABCWidgetFactory<
+        IDocumentWidget<NengoViewer, DocumentRegistry.ICodeModel>,
+        DocumentRegistry.ICodeModel> {
     constructor(options: NengoViewerFactory.IOptions) {
         super(options);
 
@@ -221,9 +224,16 @@ extends ABCWidgetFactory<NengoViewer, DocumentRegistry.ICodeModel> {
 
     protected createNewWidget(
         context: DocumentRegistry.IContext<
-            DocumentRegistry.ICodeModel>): NengoViewer {
-        return new NengoViewer({ context, docManager: this._docManager });
-    }
+        DocumentRegistry.ICodeModel>): IDocumentWidget<
+            NengoViewer, DocumentRegistry.ICodeModel> {
+                return new DocumentWidget({
+                    content: new NengoViewer({
+                        context,
+                        docManager: this._docManager,
+                    }),
+                    context
+                });
+            }
 
     private _docManager: DocumentManager;
 }
@@ -249,7 +259,7 @@ const extension: JupyterLabPlugin<void> = {
     autoStart: true,
     requires: [ILayoutRestorer],
     activate: (app: JupyterLab, restorer: ILayoutRestorer) => {
-        let opener = {open: (widget: Widget) => { }};
+        let opener = {open: (widget: DocumentWidget) => { }};
         let docManager = new DocumentManager({
             registry: app.docRegistry,
             manager: app.serviceManager,
@@ -272,8 +282,10 @@ const extension: JupyterLabPlugin<void> = {
 
         app.docRegistry.addWidgetFactory(factory);
         factory.widgetCreated.connect((sender, widget) => {
-            tracker.add(widget);
-            widget.context.pathChanged.connect(() => { tracker.save(widget); });
+            tracker.add(widget.content);
+            widget.context.pathChanged.connect(() => {
+                tracker.save(widget.content);
+            });
         });
 
         console.log('JupyterLab extension jupyterlab-nengo is activated!');
