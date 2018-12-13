@@ -16,6 +16,24 @@ may break at any time.**
 
 ## Installation
 
+### Activate the Nengo GUI Jupyter notebook server extension (backend)
+
+Add the following to your `~/.jupyter/jupyter_notebook_config.json`:
+
+```json
+{
+  "NotebookApp": {
+    "nbserver_extensions": {
+      "nengo_gui.jupyter": true
+    }
+  }
+}
+```
+
+### Install the JupyterLab extension (frontend)
+
+Run:
+
 ```bash
 jupyter labextension install @jgosmann/jupyterlab-nengo
 ```
