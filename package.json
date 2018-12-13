@@ -1,5 +1,5 @@
 {
-  "name": "jupyterlab-nengo",
+  "name": "@jgosmann/jupyterlab-nengo",
   "version": "0.1.0",
   "description": "Use the Nengo GUI within JupyterLab.",
   "keywords": [
@@ -7,12 +7,12 @@
     "jupyterlab",
     "jupyterlab-extension"
   ],
-  "homepage": "https://github.com/nengo/jupyterlab-nengo",
+  "homepage": "https://github.com/jgosmann/jupyterlab-nengo",
   "bugs": {
-    "url": "https://github.com/nengo/jupyterlab-nengo/issues"
+    "url": "https://github.com/jgosmann/jupyterlab-nengo/issues"
   },
-  "license": "Nengo license",
-  "author": "Applied Brain Research",
+  "license": "MIT",
+  "author": "Jan Gosmann",
   "files": [
     "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
     "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
@@ -21,7 +21,7 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nengo/jupyterlab-nengo.git"
+    "url": "https://github.com/jgosmann/jupyterlab-nengo.git"
   },
   "scripts": {
     "build": "tsc",
