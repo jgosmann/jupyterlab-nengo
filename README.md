@@ -5,6 +5,8 @@ Use the Nengo GUI within JupyterLab.
 **Warning: The JupyterLab extension API is not stable yet and thus this extension
 may break at any time.**
 
+![Screenshot of Nengo GUI running in JupyterLab](screen-small.png)
+
 ## Prerequisites
 
 * JupyterLab
