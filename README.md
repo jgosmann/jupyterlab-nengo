@@ -10,6 +10,7 @@ may break at any time.**
 ## Prerequisites
 
 * JupyterLab
+* [Node.js](https://nodejs.org/en/) with npm
 * [Nengo GUI](https://github.com/nengo/nengo-gui) development version from
   GitHub. (Required features should be included in version 0.4.4 whenever it
   gets released.)
