@@ -2,18 +2,14 @@
 
 Use the Nengo GUI within JupyterLab.
 
-**Warning: The JupyterLab extension API is not stable yet and thus this extension
-may break at any time.**
-
 ![Screenshot of Nengo GUI running in JupyterLab](screen-small.png)
 
 ## Prerequisites
 
 * JupyterLab
 * [Node.js](https://nodejs.org/en/) with npm
-* [Nengo GUI](https://github.com/nengo/nengo-gui) development version from
-  GitHub. (Required features should be included in version 0.4.4 whenever it
-  gets released.)
+* [Nengo GUI](https://github.com/nengo/nengo-gui) from GitHub with the
+  fix-jupyter-integration branch being installed.
 
 ## Installation
 
