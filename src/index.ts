@@ -1,9 +1,9 @@
 import {
-  ILayoutRestorer, JupyterLab, JupyterLabPlugin
+  ILayoutRestorer, JupyterLab, JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
 import {
-    InstanceTracker
+    WidgetTracker
 } from '@jupyterlab/apputils';
 
 import {
@@ -254,7 +254,7 @@ const FACTORY = 'Nengo';
 /**
  * Initialization data for the jupyterlab_nengo extension.
  */
-const extension: JupyterLabPlugin<void> = {
+const extension: JupyterFrontEndPlugin<void> = {
     id: 'jupyterlab-nengo',
     autoStart: true,
     requires: [ILayoutRestorer],
@@ -272,7 +272,7 @@ const extension: JupyterLabPlugin<void> = {
             docManager
         });
 
-        const tracker = new InstanceTracker<NengoViewer>(
+        const tracker = new WidgetTracker<NengoViewer>(
             { namespace: 'nengoviewer' });
         restorer.restore(tracker, {
             command: 'docmanager:open',
